@@ -4,14 +4,14 @@ A real-money, provably fair, multiplayer Agar.io-style battle royale game with e
 
 ## 🚀 Deploy to Website Now
 
-**Want to run this on a live website?** → See **[QUICKSTART.md](./QUICKSTART.md)**
+**Want to run this on a live website?** → See **[ACTUALLY_WORKS.md](./ACTUALLY_WORKS.md)**
 
-Three deployment options:
-1. **Vercel + Render** (5 minutes, free tier available)
-2. **Railway** (one-click deploy)
-3. **Your own VPS** (full control, custom domain)
+Three WORKING deployment options:
+1. **Render.com** (10 minutes, reads `render.yaml` automatically) ← RECOMMENDED
+2. **Replit** (2 minutes, zero config, just click Run) ← EASIEST
+3. **Your own VPS** (full control, one-line install script)
 
-All with step-by-step guides! 👆
+**Note**: Railway doesn't handle monorepos well. Use the options above instead!
 
 ---
 

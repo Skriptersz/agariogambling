@@ -1,49 +1,50 @@
-# Render.com configuration for API server
 services:
+  # API Server
   - type: web
-    name: agar-api-server
-    env: node
-    region: oregon
+    name: agar-api
+    runtime: node
     plan: starter
-    buildCommand: npm install && npm run build:shared && npm run build:server
-    startCommand: npm run start:server
+    buildCommand: chmod +x build-server.sh && ./build-server.sh
+    startCommand: chmod +x start-server.sh && ./start-server.sh
     envVars:
       - key: NODE_ENV
         value: production
+      - key: PORT
+        value: 3000
       - key: DATABASE_URL
         fromDatabase:
-          name: agar-postgres
+          name: agar-db
           property: connectionString
       - key: REDIS_URL
-        fromService:
-          type: redis
+        fromDatabase:
           name: agar-redis
           property: connectionString
       - key: JWT_SECRET
         generateValue: true
-      - key: PORT
-        value: 3000
+      - key: CORS_ORIGIN
+        value: "*"
 
+  # Game Server
   - type: web
-    name: agar-game-server
-    env: node
-    region: oregon
+    name: agar-game
+    runtime: node
     plan: starter
-    buildCommand: npm install && npm run build:shared && npm run build:game
-    startCommand: npm run start:game
+    buildCommand: chmod +x build-game.sh && ./build-game.sh
+    startCommand: chmod +x start-game.sh && ./start-game.sh
     envVars:
       - key: NODE_ENV
         value: production
-      - key: REDIS_URL
-        fromService:
-          type: redis
-          name: agar-redis
-          property: connectionString
       - key: GAME_SERVER_PORT
         value: 3001
+      - key: REDIS_URL
+        fromDatabase:
+          name: agar-redis
+          property: connectionString
+      - key: CORS_ORIGIN
+        value: "*"
 
 databases:
-  - name: agar-postgres
+  - name: agar-db
     databaseName: agar_arena
     plan: starter
 

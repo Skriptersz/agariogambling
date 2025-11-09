@@ -1,10 +1,10 @@
 # 🚀 Quick Deploy to Website
 
-Three simple ways to deploy P2P Agar Arena to a live website:
+**UPDATE**: Railway has issues with monorepos. Use one of these WORKING options instead:
 
 ---
 
-## Option 1: Vercel (Easiest - 5 Minutes)
+## ✅ Option 1: Render.com (RECOMMENDED - Actually Works)
 
 **Best for:** Quick testing, frontend hosting
 
@@ -52,16 +52,17 @@ Done! Your site is live! 🎉
 
 ---
 
-## Option 2: One-Click Railway Deploy
+## ✅ Option 2: Replit (EASIEST - 2 Minutes)
 
-**Best for:** All-in-one deployment
+**Best for:** Quick testing, zero config
 
-[![Deploy on Railway](https://railway.app/button.svg)](https://railway.app/new)
+1. Go to https://replit.com
+2. Click "Import from GitHub"
+3. Paste: `https://github.com/Skriptersz/agariogambling`
+4. Click "Run"
+5. Get instant live URL
 
-1. Click the button above
-2. Connect GitHub repo
-3. Railway auto-configures everything
-4. Get your live URL in 2 minutes
+Replit auto-detects everything. No configuration needed!
 
 ---
 

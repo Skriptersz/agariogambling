@@ -1,0 +1,19 @@
+# Railway Monorepo Configuration
+
+# This tells Railway this is a Node.js monorepo
+[build]
+builder = "NIXPACKS"
+
+[build.env]
+NODE_VERSION = "20"
+
+# Default to building everything
+[[build.cmds]]
+cmd = "npm install"
+
+[[build.cmds]]
+cmd = "npm run build:shared"
+
+# This will be overridden per service
+[start]
+cmd = "echo 'Configure service-specific start command in Railway dashboard'"
