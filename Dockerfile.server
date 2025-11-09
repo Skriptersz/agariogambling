@@ -1,0 +1,22 @@
+FROM node:20-alpine
+
+WORKDIR /app
+
+# Copy package files
+COPY package.json ./
+COPY packages/server/package.json ./packages/server/
+COPY packages/shared/package.json ./packages/shared/
+
+# Install dependencies
+RUN npm install
+
+# Copy source
+COPY packages/server ./packages/server
+COPY packages/shared ./packages/shared
+COPY tsconfig.json ./
+
+# Build
+RUN npm run build -w @agar/shared
+RUN npm run build -w @agar/server
+
+CMD ["npm", "run", "start", "-w", "@agar/server"]

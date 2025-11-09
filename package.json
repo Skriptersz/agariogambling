@@ -1,0 +1,23 @@
+{
+  "name": "p2p-agar-arena",
+  "version": "1.0.0",
+  "description": "P2P Money-Match Agar Arena",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "npm run build --workspaces",
+    "dev:server": "npm run dev -w @agar/server",
+    "dev:client": "npm run dev -w @agar/client",
+    "dev:game": "npm run dev -w @agar/game-server",
+    "test": "npm run test --workspaces",
+    "db:migrate": "npm run db:migrate -w @agar/server",
+    "docker:up": "docker-compose up -d",
+    "docker:down": "docker-compose down"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.0",
+    "typescript": "^5.3.0"
+  }
+}

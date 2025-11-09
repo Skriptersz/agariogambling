@@ -1,0 +1,149 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: agar-postgres
+    environment:
+      POSTGRES_DB: agar_arena
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: agar-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  minio:
+    image: minio/minio:latest
+    container_name: agar-minio
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - minio_data:/data
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 30s
+      timeout: 20s
+      retries: 3
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: agar-prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus_data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: agar-grafana
+    ports:
+      - "3003:3000"
+    environment:
+      GF_SECURITY_ADMIN_PASSWORD: admin
+    volumes:
+      - grafana_data:/var/lib/grafana
+    depends_on:
+      - prometheus
+
+  api-server:
+    build:
+      context: .
+      dockerfile: Dockerfile.server
+    container_name: agar-api-server
+    environment:
+      NODE_ENV: development
+      PORT: 3000
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: agar_arena
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+      REDIS_URL: redis://redis:6379
+      JWT_SECRET: supersecret-change-in-production
+    ports:
+      - "3000:3000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      - ./packages/server:/app/packages/server
+      - ./packages/shared:/app/packages/shared
+      - /app/node_modules
+      - /app/packages/server/node_modules
+      - /app/packages/shared/node_modules
+
+  game-server:
+    build:
+      context: .
+      dockerfile: Dockerfile.game
+    container_name: agar-game-server
+    environment:
+      NODE_ENV: development
+      GAME_SERVER_PORT: 3001
+      REDIS_URL: redis://redis:6379
+    ports:
+      - "3001:3001"
+    depends_on:
+      redis:
+        condition: service_healthy
+    volumes:
+      - ./packages/game-server:/app/packages/game-server
+      - ./packages/shared:/app/packages/shared
+      - /app/node_modules
+      - /app/packages/game-server/node_modules
+      - /app/packages/shared/node_modules
+
+  client:
+    build:
+      context: .
+      dockerfile: Dockerfile.client
+    container_name: agar-client
+    environment:
+      NODE_ENV: development
+      VITE_API_URL: http://localhost:3000
+      VITE_WS_URL: http://localhost:3001
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./packages/client:/app/packages/client
+      - ./packages/shared:/app/packages/shared
+      - /app/node_modules
+      - /app/packages/client/node_modules
+      - /app/packages/shared/node_modules
+
+volumes:
+  postgres_data:
+  redis_data:
+  minio_data:
+  prometheus_data:
+  grafana_data:
