@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 
 interface HomeProps {
-  onStartGame: (matchId: string) => void;
+  onStartGame: (matchId: string, buyInCents: number) => void;
 }
 
 export function Home({ onStartGame }: HomeProps) {
@@ -94,7 +94,7 @@ export function Home({ onStartGame }: HomeProps) {
       }
 
       const { wsToken } = await joinRes.json();
-      onStartGame(lobbyId);
+      onStartGame(lobbyId, buyInCents);
     } catch (err: any) {
       setError(err.message);
     }
