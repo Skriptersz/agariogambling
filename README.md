@@ -2,6 +2,19 @@
 
 A real-money, provably fair, multiplayer Agar.io-style battle royale game with escrow-based wagering.
 
+## 🚀 Deploy to Website Now
+
+**Want to run this on a live website?** → See **[QUICKSTART.md](./QUICKSTART.md)**
+
+Three deployment options:
+1. **Vercel + Render** (5 minutes, free tier available)
+2. **Railway** (one-click deploy)
+3. **Your own VPS** (full control, custom domain)
+
+All with step-by-step guides! 👆
+
+---
+
 ## Features
 
 ### Core Gameplay

@@ -1,0 +1,51 @@
+# Render.com configuration for API server
+services:
+  - type: web
+    name: agar-api-server
+    env: node
+    region: oregon
+    plan: starter
+    buildCommand: npm install && npm run build:shared && npm run build:server
+    startCommand: npm run start:server
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_URL
+        fromDatabase:
+          name: agar-postgres
+          property: connectionString
+      - key: REDIS_URL
+        fromService:
+          type: redis
+          name: agar-redis
+          property: connectionString
+      - key: JWT_SECRET
+        generateValue: true
+      - key: PORT
+        value: 3000
+
+  - type: web
+    name: agar-game-server
+    env: node
+    region: oregon
+    plan: starter
+    buildCommand: npm install && npm run build:shared && npm run build:game
+    startCommand: npm run start:game
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: REDIS_URL
+        fromService:
+          type: redis
+          name: agar-redis
+          property: connectionString
+      - key: GAME_SERVER_PORT
+        value: 3001
+
+databases:
+  - name: agar-postgres
+    databaseName: agar_arena
+    plan: starter
+
+  - name: agar-redis
+    plan: starter
