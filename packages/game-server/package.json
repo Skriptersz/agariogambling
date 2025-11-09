@@ -1,0 +1,22 @@
+{
+  "name": "@agar/game-server",
+  "version": "1.0.0",
+  "main": "./dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "dev": "nodemon --watch src --ext ts --exec ts-node src/index.ts",
+    "start": "node dist/index.js"
+  },
+  "dependencies": {
+    "@agar/shared": "workspace:*",
+    "socket.io": "^4.6.1",
+    "dotenv": "^16.3.1",
+    "uuid": "^9.0.1"
+  },
+  "devDependencies": {
+    "@types/uuid": "^9.0.7",
+    "typescript": "^5.3.0",
+    "ts-node": "^10.9.2",
+    "nodemon": "^3.0.2"
+  }
+}
